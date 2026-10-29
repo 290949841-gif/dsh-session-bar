@@ -1,0 +1,52 @@
+{
+  "name": "dsh-done-flash",
+  "version": "0.1.0",
+  "description": "DeepSeek Harness 侧栏会话状态条：任务进行中显示估算进度百分比和流光进度条，任务完成后整行转橙并一直保留到你点开为止。",
+  "keywords": [
+    "deepseek",
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "plugin",
+    "session",
+    "sidebar",
+    "progress",
+    "status",
+    "ui"
+  ],
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    }
+  },
+  "license": "MIT",
+  "author": {
+    "name": "machong199412345-coder",
+    "url": "https://github.com/machong199412345-coder"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/machong199412345-coder/dsh-session-bar.git"
+  },
+  "homepage": "https://github.com/machong199412345-coder/dsh-session-bar#readme",
+  "bugs": {
+    "url": "https://github.com/machong199412345-coder/dsh-session-bar/issues"
+  }
+}

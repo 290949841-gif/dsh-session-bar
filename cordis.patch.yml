@@ -1,0 +1,4 @@
+# 把 Host 半端和 Web Client 半端作为一行 Cordis 插件装进 profile。
+- insert:
+    - id: dsh-done-flash
+      name: 'dsh-done-flash'
