@@ -90,7 +90,13 @@ window.__ModuleLoader__.load({
   height:6px;
   width:max(0px, calc(var(--dsh-run-progress,0%) - 5px));
   border-radius:3px;
-  background:linear-gradient(90deg, #5eead4, #67e8f9 60%, #a5f3fc);
+  /* 三层：两层静止的白色小点 + 一层底色渐变；小点铺在条身上，不闪不滚 */
+  background-image:
+    radial-gradient(circle at 4px 2px, rgb(255 255 255 / .85) 1px, rgb(255 255 255 / 0) 1.7px),
+    radial-gradient(circle at 13px 4px, rgb(255 255 255 / .55) .8px, rgb(255 255 255 / 0) 1.4px),
+    linear-gradient(90deg, #5eead4, #67e8f9 60%, #a5f3fc);
+  background-size:19px 6px, 27px 6px, 100% 100%;
+  background-repeat:repeat-x, repeat-x, no-repeat;
   box-shadow:0 0 5px rgb(${GREEN} / .30);
   transition:width .45s linear;
   pointer-events:none;
