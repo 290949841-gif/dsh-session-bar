@@ -20,13 +20,19 @@
 
 这个插件只做一件事：**把状态画出来**。
 
+## 30 秒安装
+
+```bash
+dsh plugin --profile web add dsh-session-bar
+```
+
+装完 **⌘Q 完全退出**再打开（客户端插件在进程启动时装配，⌘R 刷新一般不够）。没有设置项，装上就工作。
+
 ---
 
 ## 效果
 
 ### 运行中 —— 绿色卡片 + 实时进度
-
-<img src="docs/running.png" width="532" alt="运行中" />
 
 - 整行转成绿色卡片（半透明绿底 + 1px 描边，和完成态是同一套骨架）。
 - **行首显示估算进度百分比**（`81%`），任务一开跑就出现。
@@ -66,6 +72,32 @@
 | 轻量动效 | 整条只有一个 3.2s 的 `background-position` 漂移（小点），其余都是 `width` 过渡；不触发重排 |
 | 不拦操作 | 只画样式，不接管点击；`prefers-reduced-motion` 下动画全关 |
 | 两套行都兼容 | 官方 `ui-workspace` 的行和 `dsh-session-keeper` fork 出来的行都能画 |
+
+---
+
+## 和同类插件的区别
+
+侧栏状态这块已经有好几个插件，各管一段。挑之前先把边界说清楚：
+
+| 插件 | 它管什么 | 和本插件的区别 |
+| --- | --- | --- |
+| **dsh-session-bar**（本插件） | 侧栏**每一行**：跑着的显示估算百分比 + 进度条，跑完转橙并一直亮 | —— |
+| `dsh-session-turn-eta` ⭐2 | 输入框下方，**当前这一轮**的进度条 + 剩余时间 | 只管你正看着的那个会话；你在别的对话里工作时它看不见。本插件画在侧栏上，**不切过去也能看到所有会话** |
+| `dsh-pinned-sessions` ⭐1 | 把运行中 / 未读会话**置顶**到工作区上方 | 解决「排在哪」，不解决「跑了多久、跑完没」。本插件**不改变任何排序** |
+| `dsh-unread-dot` ⭐3 | macOS Dock 角标 + 提示音 | 在应用**外面**提醒你。本插件在侧栏**就地**显示，且完成态会一直亮到你点开那一行为止 |
+| 官方状态点 | 只在「你不在主视图里看着」的会话上标完成 | 你正看着的那个会话跑完，官方**什么都不会显示**——本插件补的正是这个洞 |
+
+一句话：**那些插件回答「哪个会话在动」，这个插件回答「这条跑到哪了、跑完了没」**，而且是整列一起回答。
+
+## 它不做什么
+
+刻意留白，免得装上才发现不是想要的：
+
+- **不做通知**：没有音效、没有 Dock 角标、没有系统通知（那是 `dsh-unread-dot` 的活）。
+- **不改变排序**：不置顶、不分组、不归档（那是 `dsh-pinned-sessions` / `dsh-session-keeper` 的活）。
+- **不接管点击**：只往行上画样式和属性，菜单、拖拽、重命名全部保持官方行为。
+- **不写服务端**：所有状态在浏览器 `localStorage` 里，删掉就等于恢复出厂。
+- **不给真实进度**：拿不到总步数，百分比是估的——所以超时会老实切换成已用时长，不装成 99%。
 
 ---
 
@@ -159,6 +191,25 @@ git clone https://github.com/290949841-gif/dsh-session-bar.git \
 
 ---
 
+## 常见问题
+
+**装完没反应？**
+客户端插件在进程启动时装配，`⌘R` 刷新一般不够，要 **⌘Q 完全退出**再打开。
+
+**百分比怎么算的？**
+侧栏每行只暴露 `running` 和 `updatedAt`，拿不到总步数，所以进度是按「这个会话以前跑多久」推的：每个标题记最近 6 次真实耗时取中位数，新会话用全局中位数（最多 24 次），都没有就按 3 分钟。跑得越多越准。
+
+**为什么跑完要等点开才消？**
+就是故意的。一次跑十几分钟的活，希望你切回来时一眼看见「哪几个跑完了」，点开确认过才清。点行尾「…」菜单不算点开，不会误清。
+
+**颜色/粗细能改吗？**
+能，改 `client.js` 里的 CSS 常量即可（绿色 `#34d399` 系、橙色 `#fb923c` 系、条高 6px）。改完同样要 ⌘Q 重启。
+
+**会和别的侧栏插件冲突吗？**
+目前只往行上加属性和样式，不接管点击。已针对官方的行和 `dsh-session-keeper` fork 的行分别适配。已知：和置顶/分组类插件（`dsh-pinned-sessions`、`dsh-session-keeper`）可以共存。
+
+---
+
 ## English
 
 **dsh-session-bar** is a client-side plugin for [DeepSeek Harness](https://github.com/deepseek-ai) that makes sidebar session rows self-describing:
@@ -167,7 +218,24 @@ git clone https://github.com/290949841-gif/dsh-session-bar.git \
 - **Done** — the row flips to orange (border, left bar, dot, tinted title) and stays that way until you click the row, so finished tasks never slip by unnoticed.
 - **Overtime** — past the estimate it stops pretending and shows real elapsed time (`6:12`) instead of a fake 99%.
 
-No configuration, no server side, no looping animations. Install via the DSH plugin market, or clone into `~/.dsh/profiles/desktop/plugins/` and add the insert block to `cordis.patch.yml`.
+No configuration, no server side, no looping animations.
+
+```bash
+dsh plugin --profile web add dsh-session-bar
+```
+
+Other plugins in this space answer *"which conversation is busy"*: `dsh-session-turn-eta` only shows the turn you are looking at, `dsh-unread-dot` badges the Dock, `dsh-pinned-sessions` reorders rows. This one answers *"how far along is each one, and did it finish"* — for every row in the sidebar at once, without switching conversations. It adds no notifications, reorders nothing, and never intercepts clicks.
+
+---
+
+## 如果它省了你几次切换
+
+那就点个 ⭐ —— 这是唯一能让别的 DSH 用户看见它的方式。
+
+想要别的颜色、条高、或者「完成后播一声」，直接开 issue 说，这个插件现在的样子就是照着真实反馈一路改出来的：
+
+- 仓库：<https://github.com/290949841-gif/dsh-session-bar>
+- 问题/建议：<https://github.com/290949841-gif/dsh-session-bar/issues>
 
 ---
 
