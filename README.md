@@ -3,6 +3,7 @@
 > 让 DeepSeek Harness 侧栏里的每一个会话自己「说话」：跑着的带进度条，跑完的亮橙色。
 
 [![DeepSeek Harness](https://img.shields.io/badge/DeepSeek%20Harness-0.2.x-4f7cff)](https://github.com/deepseek-ai)
+[![npm](https://img.shields.io/npm/v/dsh-session-bar?color=cb3837&label=npm)](https://www.npmjs.com/package/dsh-session-bar)
 [![platform](https://img.shields.io/badge/platform-web-34d399)](#)
 [![license](https://img.shields.io/badge/license-MIT-fb923c)](LICENSE)
 
@@ -70,7 +71,19 @@
 
 ## 安装
 
-### 手动挂载到 profile（当前唯一方式）
+### 方式一：npm（一条命令）
+
+```bash
+dsh plugin --profile web add dsh-session-bar
+```
+
+### 方式二：GitHub Release 包（不依赖 npm）
+
+```bash
+dsh plugin --profile web add "https://github.com/290949841-gif/dsh-session-bar/releases/download/v0.1.0/dsh-session-bar-0.1.0.tgz"
+```
+
+### 方式三：手动挂载到 profile
 
 ```bash
 git clone https://github.com/290949841-gif/dsh-session-bar.git \
