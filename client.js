@@ -1,5 +1,5 @@
 window.__ModuleLoader__.load({
-  id: "dsh-done-flash",
+  id: "dsh-session-bar",
   factory: () => {
     // ── 这个插件在补什么 ────────────────────────────────────────────────────
     // 官方的"已完成"绿点由 @deepseek-ai/dsh-client-ui-session 决定：
@@ -35,9 +35,9 @@ window.__ModuleLoader__.load({
     const MARK = "data-done-mark";
     const DOT = "data-done-dot";
     const RUN = "data-running-mark";
-    const STORE_KEY = "dsh-done-mark:keys";
-    const DUR_KEY = "dsh-done-flash:durations";
-    const RUN_KEY = "dsh-done-flash:running";
+    const STORE_KEY = "dsh-session-bar:read";
+    const DUR_KEY = "dsh-session-bar:durations";
+    const RUN_KEY = "dsh-session-bar:running";
     const ORANGE = "#fb923c";
     const GREEN = "52 211 153";
     const DEFAULT_MS = 180000;
@@ -157,9 +157,9 @@ window.__ModuleLoader__.load({
 
     const inject = () => {
       try {
-        if (document.querySelector('style[data-plugin="dsh-done-flash"]') !== null) return;
+        if (document.querySelector('style[data-plugin="dsh-session-bar"]') !== null) return;
         const style = document.createElement("style");
-        style.dataset.plugin = "dsh-done-flash";
+        style.dataset.plugin = "dsh-session-bar";
         style.textContent = CSS;
         document.head.appendChild(style);
       } catch (_) {}
@@ -453,7 +453,7 @@ window.__ModuleLoader__.load({
 
     let stop = null;
     return {
-      name: "dsh-done-flash",
+      name: "dsh-session-bar",
       apply() {
         try {
           stop = start();

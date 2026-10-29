@@ -1,4 +1,4 @@
-# 会话状态条 · dsh-done-flash
+# 会话状态条 · dsh-session-bar
 
 > 让 DeepSeek Harness 侧栏里的每一个会话自己「说话」：跑着的带进度条，跑完的亮橙色。
 
@@ -74,21 +74,21 @@
 
 ```bash
 git clone https://github.com/machong199412345-coder/dsh-session-bar.git \
-  ~/.dsh/profiles/desktop/plugins/dsh-done-flash
+  ~/.dsh/profiles/desktop/plugins/dsh-session-bar
 ```
 
 1. 在 `~/.dsh/profiles/desktop/package.json` 的 `dependencies` 里加一行：
 
    ```json
-   "dsh-done-flash": "file:./plugins/dsh-done-flash"
+   "dsh-session-bar": "file:./plugins/dsh-session-bar"
    ```
 
 2. 在 `~/.dsh/profiles/desktop/cordis.patch.yml` 里加一段：
 
    ```yaml
    - insert:
-       - id: dsh-done-flash
-         name: 'dsh-done-flash'
+       - id: dsh-session-bar
+         name: 'dsh-session-bar'
    ```
 
 3. **⌘Q 完全退出**应用再打开（客户端插件在进程启动时装配，⌘R 刷新不一定够）。
@@ -101,10 +101,10 @@ git clone https://github.com/machong199412345-coder/dsh-session-bar.git \
 
 | 键 | 内容 |
 | --- | --- |
-| `dsh-done-mark:keys` | 已点开的会话标题（橙色标记表） |
-| `dsh-done-flash:durations` | 每个会话标题的耗时样本（最近 6 次） |
-| `dsh-done-flash:durations:global` | 全局耗时样本（最近 24 次） |
-| `dsh-done-flash:running` | 正在跑的会话的开始时间戳 |
+| `dsh-session-bar:read` | 已点开的会话标题（橙色标记表） |
+| `dsh-session-bar:durations` | 每个会话标题的耗时样本（最近 6 次） |
+| `dsh-session-bar:durations:global` | 全局耗时样本（最近 24 次） |
+| `dsh-session-bar:running` | 正在跑的会话的开始时间戳 |
 
 清空这几个键就等于恢复出厂设置（估时重新学习）。
 
@@ -148,7 +148,7 @@ git clone https://github.com/machong199412345-coder/dsh-session-bar.git \
 
 ## English
 
-**dsh-done-flash** is a client-side plugin for [DeepSeek Harness](https://github.com/deepseek-ai) that makes sidebar session rows self-describing:
+**dsh-session-bar** is a client-side plugin for [DeepSeek Harness](https://github.com/deepseek-ai) that makes sidebar session rows self-describing:
 
 - **Running** — the row turns into a green card with an estimated percentage at the leading edge and a 6px track-style progress bar (soft green track, teal gradient fill, white knob at the head, and a slow drift of tiny white dots).
 - **Done** — the row flips to orange (border, left bar, dot, tinted title) and stays that way until you click the row, so finished tasks never slip by unnoticed.
