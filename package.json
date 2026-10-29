@@ -38,16 +38,16 @@
   },
   "license": "MIT",
   "author": {
-    "name": "machong199412345-coder",
-    "url": "https://github.com/machong199412345-coder"
+    "name": "290949841-gif",
+    "url": "https://github.com/290949841-gif"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/machong199412345-coder/dsh-session-bar.git"
+    "url": "git+https://github.com/290949841-gif/dsh-session-bar.git"
   },
-  "homepage": "https://github.com/machong199412345-coder/dsh-session-bar#readme",
+  "homepage": "https://github.com/290949841-gif/dsh-session-bar#readme",
   "bugs": {
-    "url": "https://github.com/machong199412345-coder/dsh-session-bar/issues"
+    "url": "https://github.com/290949841-gif/dsh-session-bar/issues"
   },
   "publishConfig": {
     "access": "public",

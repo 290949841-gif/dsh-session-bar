@@ -73,7 +73,7 @@
 ### 手动挂载到 profile（当前唯一方式）
 
 ```bash
-git clone https://github.com/machong199412345-coder/dsh-session-bar.git \
+git clone https://github.com/290949841-gif/dsh-session-bar.git \
   ~/.dsh/profiles/desktop/plugins/dsh-session-bar
 ```
 
