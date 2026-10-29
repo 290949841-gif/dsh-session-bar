@@ -29,9 +29,9 @@
 
 - 整行转成绿色卡片（半透明绿底 + 1px 描边，和完成态是同一套骨架）。
 - **行首显示估算进度百分比**（`53%`），任务一开跑就出现。
-- 底部一条 **6px 高**的圆头进度条，行内专门给它留了 6px 高度，不会压到标题文字；底下一条更淡的浅绿轨道，里面青绿渐变填充，长度就是估算进度；条身上散着一层静止的白色小点（纯装饰，不闪不滚）；末端一颗 8px 白色圆钮压在条头上，动作像个小滑块。
+- 底部一条 **6px 高**的圆头进度条，行内专门给它留了 6px 高度，不会压到标题文字；底下一条更淡的浅绿轨道，里面青绿渐变填充，长度就是估算进度；条身上散着一层白色小点，以很慢的速度横向漂移（3.2s 走一个循环，纯装饰，不闪不跳）；末端一颗 6px 白色圆钮压在条头上，圆心正好落在进度末端，跟小滑块一样滑。
 - 行本身是浅绿描边 + 10% 透明底，标题转成淡绿。
-- **没有循环动画**：不闪、不扫光、不呼吸、数字也不跳。整行只有那根条在按真实进度加长，安静但不失存在感。
+- **除了小点的缓慢漂移，没有别的循环动画**：不闪、不扫光、不呼吸、数字也不跳。安静但有生气。
 
 ### 已完成 —— 橙色卡片，一直在
 
@@ -62,7 +62,7 @@
 | 自适应估时 | 每次跑完记录真实耗时，按会话标题留最近 6 次中位数；新会话借全局中位数；都没有按 3 分钟算 |
 | 超时诚实 | 超过预估就换成已用时长，不给假的 99% |
 | 零配置 | 没有设置项，装上就工作 |
-| 静态样式 | 没有常驻动画，只有一个 `width` 过渡；不持续占用合成线程 |
+| 轻量动效 | 整条只有一个 3.2s 的 `background-position` 漂移（小点），其余都是 `width` 过渡；不触发重排 |
 | 不拦操作 | 只画样式，不接管点击；`prefers-reduced-motion` 下动画全关 |
 | 两套行都兼容 | 官方 `ui-workspace` 的行和 `dsh-session-keeper` fork 出来的行都能画 |
 
@@ -150,7 +150,7 @@ git clone https://github.com/machong199412345-coder/dsh-session-bar.git \
 
 **dsh-done-flash** is a client-side plugin for [DeepSeek Harness](https://github.com/deepseek-ai) that makes sidebar session rows self-describing:
 
-- **Running** — the row turns into a green card with an estimated percentage at the leading edge and a 6px track-style progress bar (soft green track, teal gradient fill, white round knob at the head). No looping animation.
+- **Running** — the row turns into a green card with an estimated percentage at the leading edge and a 6px track-style progress bar (soft green track, teal gradient fill, white knob at the head, and a slow drift of tiny white dots).
 - **Done** — the row flips to orange (border, left bar, dot, tinted title) and stays that way until you click the row, so finished tasks never slip by unnoticed.
 - **Overtime** — past the estimate it stops pretending and shows real elapsed time (`6:12`) instead of a fake 99%.
 

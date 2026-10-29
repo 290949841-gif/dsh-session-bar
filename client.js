@@ -97,21 +97,22 @@ window.__ModuleLoader__.load({
     linear-gradient(90deg, #5eead4, #67e8f9 60%, #a5f3fc);
   background-size:19px 6px, 27px 6px, 100% 100%;
   background-repeat:repeat-x, repeat-x, no-repeat;
+  animation:dsh-run-dots 3.2s linear infinite;
   box-shadow:0 0 5px rgb(${GREEN} / .30);
   transition:width .45s linear;
   pointer-events:none;
 }
-/* 末端那颗白色圆钮 */
+/* 末端那颗白色圆钮：高度跟条一致，圆心落在条的末端上 */
 [${RUN}]::before{
   content:"";
   position:absolute;
   bottom:0;
-  left:max(-4px, calc(var(--dsh-run-progress,0%) - 9px));
-  width:8px;
-  height:8px;
+  left:clamp(0px, calc(var(--dsh-run-progress,0%) - 3px), calc(100% - 6px));
+  width:6px;
+  height:6px;
   border-radius:50%;
   background:#f0fdfa;
-  box-shadow:0 0 6px 1px rgb(${GREEN} / .45);
+  box-shadow:0 0 5px rgb(${GREEN} / .55);
   transition:left .45s linear;
   pointer-events:none;
 }
@@ -125,6 +126,10 @@ window.__ModuleLoader__.load({
 }
 [${RUN}] [data-state="ongoing"]{
   display:none!important;
+}
+@keyframes dsh-run-dots{
+  from{background-position:0 0, 0 0, 0 0}
+  to{background-position:19px 0, 27px 0, 0 0}
 }
 @keyframes dsh-done-mark-in{
   from{background-color:rgb(251 146 60 / .34)}
@@ -145,6 +150,7 @@ window.__ModuleLoader__.load({
 }
 @media (prefers-reduced-motion:reduce){
   [${MARK}],[${DOT}]{animation:none}
+  [${RUN}]::after{animation:none}
   [${RUN}]::before,[${RUN}]::after{transition:none}
 }
 `;
