@@ -70,44 +70,47 @@ window.__ModuleLoader__.load({
 [${RUN}]{
   position:relative;
   overflow:hidden;
-  background-color:rgb(${GREEN} / .10)!important;
-  /* 底部先铺一条整宽的轨道，进度条在里面跑 */
-  background-image:linear-gradient(rgb(${GREEN} / .16), rgb(${GREEN} / .16))!important;
+  /* 给底部这条留出 6px 的地儿，标题和进度条互不压 */
+  box-sizing:border-box!important;
+  padding-bottom:6px!important;
+  background-color:rgb(${GREEN} / .065)!important;
+  /* 轨道 */
+  background-image:linear-gradient(rgb(${GREEN} / .09), rgb(${GREEN} / .09))!important;
   background-repeat:no-repeat!important;
-  background-position:5px calc(100% - 11px)!important;
-  background-size:calc(100% - 10px) 8px!important;
-  box-shadow:inset 0 0 0 1px rgb(${GREEN} / .34)!important;
+  background-position:5px calc(100% - 6px)!important;
+  background-size:calc(100% - 10px) 6px!important;
+  box-shadow:inset 0 0 0 1px rgb(${GREEN} / .20)!important;
 }
-/* 进度条本体：8px 高、两端圆头，长度就是估算进度 */
+/* 进度条本体：6px 高、两端圆头 */
 [${RUN}]::after{
   content:"";
   position:absolute;
   left:5px;
-  bottom:3px;
-  height:8px;
+  bottom:0;
+  height:6px;
   width:max(0px, calc(var(--dsh-run-progress,0%) - 5px));
-  border-radius:4px;
-  background:linear-gradient(90deg, #34d399, #2dd4bf 55%, #22d3ee);
-  box-shadow:0 0 6px rgb(${GREEN} / .45);
+  border-radius:3px;
+  background:linear-gradient(90deg, #5eead4, #67e8f9 60%, #a5f3fc);
+  box-shadow:0 0 5px rgb(${GREEN} / .30);
   transition:width .45s linear;
   pointer-events:none;
 }
-/* 末端那颗白色圆钮，压在进度条头上 */
+/* 末端那颗白色圆钮 */
 [${RUN}]::before{
   content:"";
   position:absolute;
-  bottom:2px;
-  left:max(-5px, calc(var(--dsh-run-progress,0%) - 10px));
-  width:10px;
-  height:10px;
+  bottom:0;
+  left:max(-4px, calc(var(--dsh-run-progress,0%) - 9px));
+  width:8px;
+  height:8px;
   border-radius:50%;
   background:#f0fdfa;
-  box-shadow:0 0 7px 1px rgb(${GREEN} / .75);
+  box-shadow:0 0 6px 1px rgb(${GREEN} / .45);
   transition:left .45s linear;
   pointer-events:none;
 }
 [${RUN}] [class*="_title"]{
-  color:#a7f3d0!important;
+  color:#e3fbf3!important;
 }
 /* 行首那块 16px 的空位整个让出来：官方转圈藏掉，百分比/计时直接钉在最左边，
    这样不管这一行是从官方组件还是 keeper 的 fork 渲染的，位置都一样。 */
@@ -128,7 +131,7 @@ window.__ModuleLoader__.load({
 /* 行首那个"大概跑到多少了"的百分比数字，占的正是圆点/转圈那块位置 */
 [data-run-percent]{
   font-variant-numeric:tabular-nums;
-  color:rgb(${GREEN});
+  color:#6ee7b7;
   font-size:10px;
   line-height:20px;
   white-space:nowrap;
