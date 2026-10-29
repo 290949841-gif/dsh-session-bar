@@ -112,7 +112,7 @@ dsh plugin --profile web add dsh-session-bar
 ### 方式二：GitHub Release 包（不依赖 npm）
 
 ```bash
-dsh plugin --profile web add "https://github.com/290949841-gif/dsh-session-bar/releases/download/v0.1.0/dsh-session-bar-0.1.0.tgz"
+dsh plugin --profile web add "https://github.com/290949841-gif/dsh-session-bar/releases/download/v0.1.1/dsh-session-bar-0.1.1.tgz"
 ```
 
 ### 方式三：手动挂载到 profile
@@ -183,6 +183,10 @@ git clone https://github.com/290949841-gif/dsh-session-bar.git \
 ---
 
 ## 更新日志
+
+### 0.1.1
+- 文档打磨：安装前置到开头、新增「和同类插件的区别」对比表、「它不做什么」、常见问题、star 引导。
+- 代码无改动。
 
 ### 0.1.0
 - 运行中：绿色卡片 + 行首百分比 + 底部 6px 轨道式进度条（浅绿轨道 + 渐变填充 + 白色圆钮，静态，只有长度在变）。
