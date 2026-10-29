@@ -71,33 +71,38 @@ window.__ModuleLoader__.load({
   position:relative;
   overflow:hidden;
   background-color:rgb(${GREEN} / .10)!important;
+  /* 底部先铺一条整宽的轨道，进度条在里面跑 */
+  background-image:linear-gradient(rgb(${GREEN} / .16), rgb(${GREEN} / .16))!important;
+  background-repeat:no-repeat!important;
+  background-position:5px calc(100% - 11px)!important;
+  background-size:calc(100% - 10px) 8px!important;
   box-shadow:inset 0 0 0 1px rgb(${GREEN} / .34)!important;
 }
-/* 底部光带本体 */
+/* 进度条本体：8px 高、两端圆头，长度就是估算进度 */
 [${RUN}]::after{
   content:"";
   position:absolute;
   left:5px;
   bottom:3px;
-  height:4px;
+  height:8px;
   width:max(0px, calc(var(--dsh-run-progress,0%) - 5px));
-  border-radius:2px;
+  border-radius:4px;
   background:linear-gradient(90deg, #34d399, #2dd4bf 55%, #22d3ee);
-  box-shadow:0 0 6px rgb(${GREEN} / .5);
+  box-shadow:0 0 6px rgb(${GREEN} / .45);
   transition:width .45s linear;
   pointer-events:none;
 }
-/* 光带末端那个小圆点，跟着百分比走 */
+/* 末端那颗白色圆钮，压在进度条头上 */
 [${RUN}]::before{
   content:"";
   position:absolute;
   bottom:2px;
-  left:max(0px, calc(var(--dsh-run-progress,0%) - 6px));
-  width:6px;
-  height:6px;
+  left:max(-5px, calc(var(--dsh-run-progress,0%) - 10px));
+  width:10px;
+  height:10px;
   border-radius:50%;
-  background:#5eead4;
-  box-shadow:0 0 7px 1px rgb(${GREEN} / .8);
+  background:#f0fdfa;
+  box-shadow:0 0 7px 1px rgb(${GREEN} / .75);
   transition:left .45s linear;
   pointer-events:none;
 }

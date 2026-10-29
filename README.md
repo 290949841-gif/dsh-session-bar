@@ -6,7 +6,7 @@
 [![platform](https://img.shields.io/badge/platform-web-34d399)](#)
 [![license](https://img.shields.io/badge/license-MIT-fb923c)](LICENSE)
 
-<img src="docs/running.png" width="604" alt="任务运行中：绿色卡片 + 行首百分比 + 流光进度条" />
+<img src="docs/running.png" width="604" alt="任务运行中：绿色卡片 + 行首百分比 + 进度条" />
 
 ---
 
@@ -29,7 +29,7 @@
 
 - 整行转成绿色卡片（半透明绿底 + 1px 描边，和完成态是同一套骨架）。
 - **行首显示估算进度百分比**（`53%`），任务一开跑就出现。
-- 底部一条 4px 宽的**进度条**：绿→青渐变，长度就是估算进度，末端一颗 6px 小圆点跟着走，带一圈柔和光晕。
+- 底部一条 **8px 高**的圆头进度条：底下一条浅绿轨道，里面绿→青渐变填充，长度就是估算进度；末端一颗 10px 白色圆钮压在条头上，动作像个小滑块。
 - 行本身是浅绿描边 + 10% 透明底，标题转成淡绿。
 - **没有循环动画**：不闪、不扫光、不呼吸、数字也不跳。整行只有那根条在按真实进度加长，安静但不失存在感。
 
@@ -140,7 +140,7 @@ git clone https://github.com/machong199412345-coder/dsh-session-bar.git \
 ## 更新日志
 
 ### 0.1.0
-- 运行中：绿色卡片 + 行首百分比 + 底部 4px 渐变进度条（静态，只有长度在变）。
+- 运行中：绿色卡片 + 行首百分比 + 底部 8px 轨道式进度条（浅绿轨道 + 渐变填充 + 白色圆钮，静态，只有长度在变）。
 - 已完成：橙色卡片 + 圆点，永久保留到点开。
 - 自适应估时与超时切换已用时长显示。
 
@@ -150,7 +150,7 @@ git clone https://github.com/machong199412345-coder/dsh-session-bar.git \
 
 **dsh-done-flash** is a client-side plugin for [DeepSeek Harness](https://github.com/deepseek-ai) that makes sidebar session rows self-describing:
 
-- **Running** — the row turns into a green card with an estimated percentage at the leading edge and a 4px animated progress bar (flowing stripes, head glow, breathing tip, periodic sheen sweep).
+- **Running** — the row turns into a green card with an estimated percentage at the leading edge and an 8px track-style progress bar (soft green track, teal gradient fill, white round knob at the head). No looping animation.
 - **Done** — the row flips to orange (border, left bar, dot, tinted title) and stays that way until you click the row, so finished tasks never slip by unnoticed.
 - **Overtime** — past the estimate it stops pretending and shows real elapsed time (`6:12`) instead of a fake 99%.
 
