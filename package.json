@@ -1,6 +1,6 @@
 {
   "name": "dsh-session-bar",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "DeepSeek Harness 侧栏会话状态条：任务进行中显示估算进度百分比和流光进度条，任务完成后整行转橙并一直保留到你点开为止。",
   "keywords": [
     "deepseek",

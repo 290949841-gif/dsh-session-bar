@@ -112,7 +112,7 @@ dsh plugin --profile web add dsh-session-bar
 ### 方式二：GitHub Release 包（不依赖 npm）
 
 ```bash
-dsh plugin --profile web add "https://github.com/290949841-gif/dsh-session-bar/releases/download/v0.1.1/dsh-session-bar-0.1.1.tgz"
+dsh plugin --profile web add "https://github.com/290949841-gif/dsh-session-bar/releases/download/v0.1.2/dsh-session-bar-0.1.2.tgz"
 ```
 
 ### 方式三：手动挂载到 profile
@@ -183,6 +183,13 @@ git clone https://github.com/290949841-gif/dsh-session-bar.git \
 ---
 
 ## 更新日志
+
+### 0.1.2
+- **修复「整列误亮」**：侧栏会话行没有 React key，列表按时间重排时 DOM 元素会被复用给别的会话；旧逻辑把"标题变了"当成"会话被自动改名"，把橙标和计时一起搬走，标记于是顺着列表扩散。现在只有占位名（新会话 / New chat）才允许迁移，其余一律判定为元素复用并清空该行状态。
+- 不再信任行上的残留属性：本地标记表是唯一真相。
+- 新增最短运行门槛 2 秒：必须亲眼看着这一行跑了 2 秒以上才算完成，启动抖动和恢复会话时的瞬时状态不再变橙。
+- 存储结构升级，首次启动自动清掉旧版被污染的标记。
+- 排障接口：`window.dshSessionBar.log()` / `.marks()` / `.clearMarks()`。
 
 ### 0.1.1
 - 文档打磨：安装前置到开头、新增「和同类插件的区别」对比表、「它不做什么」、常见问题、star 引导。

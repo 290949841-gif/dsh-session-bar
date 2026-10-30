@@ -188,6 +188,23 @@ window.__ModuleLoader__.load({
     );
     const saveMarked = () => writeJson(STORE_KEY, [...marked]);
 
+    // 每次"变橙"都记一条：谁、什么时候、这一轮跑了多久。出问题能回溯。
+    const LOG_KEY = `${STORE_KEY}:log`;
+    const logMark = (title, ms) => {
+      const list = readJson(LOG_KEY, []);
+      const next = (Array.isArray(list) ? list : []).concat([{ t: Date.now(), title, ms }]);
+      writeJson(LOG_KEY, next.slice(-60));
+    };
+
+    // 存储结构版本。升级时清空一次标记表，避免老版本误标的行一直赖着。
+    const SCHEMA_KEY = `${STORE_KEY}:schema`;
+    const SCHEMA = 2;
+    if (readJson(SCHEMA_KEY, 0) !== SCHEMA) {
+      marked.clear();
+      writeJson(SCHEMA_KEY, SCHEMA);
+      saveMarked();
+    }
+
     // ── 时长样本（绿色进度条的估算依据） ─────────────────────────────────────
     const durRaw = readJson(DUR_KEY, {});
     const durations = {};
@@ -251,7 +268,14 @@ window.__ModuleLoader__.load({
       saveDurations();
     };
 
+    // 会被自动改名的占位标题：这类"标题变化"是同一个会话，其余一律当元素复用。
+    const PLACEHOLDER = /^(新会话|新对话|新聊天|空会话|New chat|New session|New conversation|Untitled)$/i;
+    const isPlaceholderTitle = (title) => title === "" || PLACEHOLDER.test(title);
+
     const previous = new WeakMap();
+    // 这一轮"我们亲眼看到它开始跑"的时刻，用来卡掉一闪而过的假 running。
+    const runSinceEl = new WeakMap();
+    const MIN_RUN_MS = 2000;
     const elementKey = new WeakMap();
     const isRunning = (row) => row.querySelector('[data-state="ongoing"]') !== null;
     const titleOf = (row) => {
@@ -340,19 +364,29 @@ window.__ModuleLoader__.load({
       for (const row of document.querySelectorAll(ROW)) {
         const key = titleOf(row);
         if (key === "") continue;
-        // 标题被自动改名时，把计时和标记迁移到新 key 上，别丢。
+        // 一行的标题变了，可能有两种完全不同的原因：
+        //   a) 会话跑完一轮后被自动命名：「新会话」→ 真标题（同一个会话）
+        //   b) React 把同一个 DOM 元素复用给了列表里的另一条会话（排序一变就会发生）
+        // 只有 (a) 该继承计时和标记；(b) 必须把元素上的一切清干净，否则标记会
+        // 顺着被复用的元素爬到毫不相干的会话上——侧栏"全亮"就是这么来的。
         const lastKey = elementKey.get(row);
         elementKey.set(row, key);
         if (lastKey !== undefined && lastKey !== key) {
-          if (runs.has(lastKey)) {
-            runs.set(key, runs.get(lastKey));
-            runs.delete(lastKey);
-            saveRuns();
-          }
-          if (marked.has(lastKey) && !marked.has(key)) {
-            marked.delete(lastKey);
-            marked.add(key);
-            saveMarked();
+          if (isPlaceholderTitle(lastKey)) {
+            if (runs.has(lastKey)) {
+              runs.set(key, runs.get(lastKey));
+              runs.delete(lastKey);
+              saveRuns();
+            }
+            if (marked.has(lastKey) && !marked.has(key)) {
+              marked.delete(lastKey);
+              marked.add(key);
+              saveMarked();
+            }
+          } else {
+            previous.delete(row);
+            runSinceEl.delete(row);
+            if (row.hasAttribute(MARK) && !marked.has(key)) unmark(row);
           }
         }
 
@@ -368,30 +402,30 @@ window.__ModuleLoader__.load({
             runs.set(key, now);
             saveRuns();
           }
+          if (!runSinceEl.has(row)) runSinceEl.set(row, now);
           paintRunning(row, key);
           continue;
         }
 
         clearRunning(row);
+        const runStarted = runSinceEl.get(row);
+        runSinceEl.delete(row);
         if (runs.has(key)) {
           recordDuration(key, now - runs.get(key));
           runs.delete(key);
           saveRuns();
         }
-        if (was === true) {
+        // 只有"亲眼看到它跑够 MIN_RUN_MS"才算完成。启动瞬间的状态抖动、
+        // 恢复会话时的短暂 running 都不会再把整列点成橙色。
+        const ranFor = runStarted === undefined ? 0 : now - runStarted;
+        if (was === true && ranFor >= MIN_RUN_MS) {
           marked.add(key);
           saveMarked();
+          logMark(key, ranFor);
           mark(row);
         }
-        // 行的标题会在一轮结束后被自动改名（"新会话" → 真标题），所以持久化的 key
-        // 以"这一行现在带着标记"为准自我修复，不让改名把标记弄丢。
-        if (row.hasAttribute(MARK)) {
-          ensureDot(row);
-          if (!marked.has(key)) {
-            marked.add(key);
-            saveMarked();
-          }
-        } else if (marked.has(key)) mark(row);
+        // 以「标记表」为准重画，而不是以行为准：行上的残留属性可能来自被复用的元素。
+        if (marked.has(key)) mark(row);
         else if (row.querySelector(`[${DOT}]`) !== null) unmark(row);
       }
     };
@@ -430,6 +464,18 @@ window.__ModuleLoader__.load({
 
     const start = () => {
       inject();
+      // 排障入口：出问题时可在控制台里查"谁被标了、什么时候标的、跑了多久"。
+      try {
+        window.dshSessionBar = {
+          marks: () => [...marked],
+          log: () => readJson(LOG_KEY, []),
+          clearMarks() {
+            marked.clear();
+            saveMarked();
+            for (const row of document.querySelectorAll(ROW)) unmark(row);
+          },
+        };
+      } catch (_) {}
       const root = document.body ?? document.documentElement;
       if (root === null) return () => {};
       // React 重渲染可能把我们插的属性/圆点/百分比冲掉，所以除了监听变动，
